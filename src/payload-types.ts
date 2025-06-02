@@ -71,6 +71,8 @@ export interface Config {
     media: Media;
     products: Product;
     categories: Category;
+    attributesets: Attributeset;
+    attributes: Attribute;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
@@ -81,6 +83,8 @@ export interface Config {
     media: MediaSelect<false> | MediaSelect<true>;
     products: ProductsSelect<false> | ProductsSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
+    attributesets: AttributesetsSelect<false> | AttributesetsSelect<true>;
+    attributes: AttributesSelect<false> | AttributesSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
@@ -183,6 +187,14 @@ export interface Product {
         id?: string | null;
       }[]
     | null;
+  attributeValues?:
+    | {
+        attribute: string | Attribute;
+        value?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  attributeSet: string | Attributeset;
   updatedAt: string;
   createdAt: string;
 }
@@ -197,6 +209,35 @@ export interface Category {
   image?: (string | null) | Media;
   slug: string;
   parent?: (string | null) | Category;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "attributes".
+ */
+export interface Attribute {
+  id: string;
+  name: string;
+  type: 'text' | 'number' | 'select';
+  options?:
+    | {
+        label?: string | null;
+        value?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "attributesets".
+ */
+export interface Attributeset {
+  id: string;
+  name: string;
+  attributes?: (string | Attribute)[] | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -222,6 +263,14 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'categories';
         value: string | Category;
+      } | null)
+    | ({
+        relationTo: 'attributesets';
+        value: string | Attributeset;
+      } | null)
+    | ({
+        relationTo: 'attributes';
+        value: string | Attribute;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -328,6 +377,14 @@ export interface ProductsSelect<T extends boolean = true> {
         altText?: T;
         id?: T;
       };
+  attributeValues?:
+    | T
+    | {
+        attribute?: T;
+        value?: T;
+        id?: T;
+      };
+  attributeSet?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -341,6 +398,33 @@ export interface CategoriesSelect<T extends boolean = true> {
   image?: T;
   slug?: T;
   parent?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "attributesets_select".
+ */
+export interface AttributesetsSelect<T extends boolean = true> {
+  name?: T;
+  attributes?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "attributes_select".
+ */
+export interface AttributesSelect<T extends boolean = true> {
+  name?: T;
+  type?: T;
+  options?:
+    | T
+    | {
+        label?: T;
+        value?: T;
+        id?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
 }

@@ -47,5 +47,27 @@ export const Products: CollectionConfig = {
       ],
       required: false,
     },
+    {
+      name: 'attributeValues',
+      type: 'array',
+      fields: [
+        {
+          name: 'attribute',
+          type: 'relationship',
+          relationTo: 'attributes',
+          required: true,
+        },
+        {
+          name: 'value',
+          type: 'text',
+        },
+      ],
+    },
+    {
+      name: 'attributeSet',
+      type: 'relationship',
+      relationTo: 'attributesets',
+      required: true,
+    },
   ],
 }
